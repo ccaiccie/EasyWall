@@ -1,5 +1,8 @@
 # How to Install EasyWall
 
+Installation Instructures for the rewritten version will be added soon.
+
+<!--
 You just need three simple steps for installing EasyWall on your system.
 
 ## Index
@@ -39,4 +42,4 @@ sudo chmod +x install.sh
 sudo bash install.sh
 ```
 
-We suggest to use the installer for proper installation. **You have to execute the installer as root user!** For manual installation execute the steps in the installer file on your own.
+We suggest to use the installer for proper installation. **You have to execute the installer as root user!** For manual installation execute the steps in the installer file on your own. -->
