@@ -1,0 +1,4 @@
+# This file is overwritten by Web-Panel!
+# Comments are not overwritten.
+# Add one IP-Address per line.
+# Please write expanded IPv6-Addresses! They are not expanded by EasyWall.

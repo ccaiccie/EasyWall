@@ -1,0 +1,18 @@
+{
+  "name": "easywall",
+  "keywords": [],
+  "version": "1.0.0",
+  "description": "easy way to manage oldschool firewalls",
+  "main": "easywall",
+  "repository": "https://github.com/KingJP/EasyWall",
+  "authors": [
+    "KingJP <jochen@pylypiw.com>"
+  ],
+  "license": "GPL-3.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "4.0.0-beta.3",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1"
+  }
+}
