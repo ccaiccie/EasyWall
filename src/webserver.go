@@ -1,65 +1,105 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	// "encoding/json"
 	"io"
+	"io/ioutil"
+	"net/http"
 	"net/http/httputil"
+	"strconv"
+	"strings"
 )
 
-// type handler func(w http.ResponseWriter, r *http.Request)
+var isAuthenticated = false
 
 // StartWebserver - Start the Listener for Pages, Assets and AJAX
 func StartWebserver() {
-	// Handle Assets Static
-	fs := http.FileServer(http.Dir("assets/"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	var err error
+	var addr = ConfigGetValue("server", "address") + ":" + ConfigGetValue("server", "port")
 
-	// Handle Individual Pages
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 	http.HandleFunc("/", homeHandler)
 
-	// Start the Server
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-// homeHandler - Handler for the Index Page
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-
-	} else if r.Method == "GET" {
-		// w.Header().Set("Content-Type", "application/json")
-		result, _ := httputil.DumpRequest(r, true)
-		Log(string(result))
-		io.WriteString(w, string(result))
+	if ConfigGetValue("server", "ssl") == "true" {
+		err = http.ListenAndServeTLS(addr, ConfigGetValue("server", "certfile"), ConfigGetValue("server", "keyfile"), nil)
+	} else {
+		err = http.ListenAndServe(addr, nil)
+	}
+	if err != nil {
+		Error(err)
 	}
 }
 
-// errorHandler - Handle Not Found or 403 Errors Correctly
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	result, _ := httputil.DumpRequest(r, true)
+	Log(string(result))
+
+	pusher, ok := w.(http.Pusher)
+	if ok {
+		err := pusher.Push("/static/stylesheet/bootstrap.min.css", nil)
+		if err != nil {
+			Error(err)
+			return
+		}
+		pusher.Push("/static/images/favicon.ico", nil)
+		pusher.Push("/static/stylesheet/font-awesome.min.css", nil)
+		pusher.Push("/static/stylesheet/font-awesome.min.css", nil)
+		pusher.Push("/static/stylesheet/easywall.min.css", nil)
+		pusher.Push("/static/javascript/jquery.min.js", nil)
+		pusher.Push("/static/javascript/popper.min.js", nil)
+		pusher.Push("/static/javascript/bootstrap.min.js", nil)
+		pusher.Push("/static/javascript/easywall.min.js", nil)
+	}
+
+	if r.URL.Path == "/" {
+		io.WriteString(w, getTemplate("home"))
+	} else {
+		errorHandler(w, r, 404)
+		return
+	}
+}
+
 func errorHandler(w http.ResponseWriter, r *http.Request, status int) {
 	w.WriteHeader(status)
-	if status == http.StatusNotFound {
-		http.Error(w, "404", http.StatusNotFound)
-	}
+
+	template := getTemplate("error")
+	template = strings.Replace(template, "[[status]]", strconv.Itoa(status), -1)
+
+	io.WriteString(w, template)
 }
 
-// func HandleIndex(w http.ResponseWriter, r *http.Request) {
-//     io.WriteString(w, "hello, world\n")
-// }
+func getTemplate(page string) string {
+	assetPath := "./assets/html/"
+	var html string
 
-// func HandlePost(w http.ResponseWriter, r *http.Request) {
-//     r.ParseForm()
-//     log.Println(r.PostForm)
-//     io.WriteString(w, "post\n")
-// }
+	content, err := ioutil.ReadFile(assetPath + "head.html")
+	if err != nil {
+		Error(err)
+		return ""
+	}
+	s := string(content)
+	html = html + s
 
-// type Result struct {
-//     FirstName string `json:"first"`
-//     LastName  string `json:"last"`
-// }
+	content, err = ioutil.ReadFile(assetPath + "nav.html")
+	if err != nil {
+		Error(err)
+		return ""
+	}
+	s = string(content)
+	html = html + s
 
-// func HandleJSON(w http.ResponseWriter, r *http.Request) {
-//     w.Header().Set("Content-Type", "application/json")
-//     result, _ := json.Marshal(Result{"tee", "dub"})
-//     io.WriteString(w, string(result))
-// }
+	content, err = ioutil.ReadFile(assetPath + page + ".html")
+	if err != nil {
+		Error(err)
+		return ""
+	}
+	s = string(content)
+	html = html + s
+
+	content, err = ioutil.ReadFile(assetPath + "footer.html")
+	if err != nil {
+		Error(err)
+		return ""
+	}
+	s = string(content)
+	return html + s
+}

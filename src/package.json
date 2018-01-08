@@ -1,18 +1,26 @@
 {
-  "name": "easywall",
-  "keywords": [],
-  "version": "1.0.0",
-  "description": "easy way to manage oldschool firewalls",
-  "main": "easywall",
-  "repository": "https://github.com/KingJP/EasyWall",
-  "authors": [
-    "KingJP <jochen@pylypiw.com>"
-  ],
-  "license": "GPL-3.0",
-  "private": true,
-  "dependencies": {
-    "bootstrap": "4.0.0-beta.3",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.2.1"
-  }
+    "name": "easywall",
+    "version": "0.0.1",
+    "description": "easywall is the modern and easy way to manage oldschool firewalls",
+    "keywords": [
+        "iptables",
+        "firewall",
+        "easywall",
+        "webinterface"
+    ],
+    "license": "GPL-3.0",
+    "homepage": "github:KingJP/EasyWall",
+    "bugs": "https://github.com/KingJP/EasyWall/issues",
+    "author": "KingJP <jochen@pylypiw.com>",
+    "private": true,
+    "devDependencies": {
+        "bootstrap": "4.0.0-beta.3",
+        "font-awesome": "^4.7.0",
+        "grunt": "^1.0.1",
+        "grunt-contrib-cssmin": "^2.2.1",
+        "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
+        "jquery": "^3.2.1",
+        "popper.js": "^1.12.9"
+    },
+    "dependencies": {}
 }

@@ -4,6 +4,8 @@
 *.lock
 *.ini
 *.pem
+*.lock
+*lock.json
 
 # folders
 bower_components
