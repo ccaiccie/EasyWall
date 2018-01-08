@@ -1,4 +1,10 @@
+# files
 *.log
 *.php
+*.lock
+*.ini
+*.pem
+
+# folders
 bower_components
 node_modules
